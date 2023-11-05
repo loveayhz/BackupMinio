@@ -15,9 +15,18 @@ jobs:
       image: minio/mc
     steps:
       - name: alies minio bucket
+        env:
+          DEST_MINIO_HOST: ${{ secrets.DEST_MINIO_HOST }}
+          DEST_MINIO_ACCESS_KEY: ${{ secrets.DEST_MINIO_ACCESS_KEY }}
+          DEST_MINIO_SECRET_KEY: ${{ secrets.DEST_MINIO_SECRET_KEY }}
+          DEST_MINIO_BUCKET: ${{ secrets.DEST_MINIO_BUCKET }}
+          SOURCE_MINIO_HOST: ${{ secrets.SOURCE_MINIO_HOST }}
+          SOURCE_MINIO_ACCESS_KEY: ${{ secrets.SOURCE_MINIO_ACCESS_KEY }}
+          SOURCE_MINIO_SECRET_KEY: ${{ secrets.SOURCE_MINIO_SECRET_KEY }}
+          SOURCE_MINIO_BUCKET: ${{ secrets.SOURCE_MINIO_BUCKET }}
         run: (mc alias set destBucket $DEST_MINIO_HOST $DEST_MINIO_ACCESS_KEY $DEST_MINIO_SECRET_KEY && mc alias set sourceBucket $SOURCE_MINIO_HOST $SOURCE_MINIO_ACCESS_KEY $SOURCE_MINIO_SECRET_KEY)
       - name: buckupAll
-        run: mc cp --recursive sourceBucket  destBucket
+        run: mc cp --recursive sourceBucket/$SOURCE_MINIO_BUCKET  destBucket/$DEST_MINIO_BUCKET
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
