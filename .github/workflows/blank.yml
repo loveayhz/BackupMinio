@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '30 10 * * *'
+    - cron:  '44 18 * * *'
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   container_job:
@@ -28,23 +28,4 @@ jobs:
           SOURCE_MINIO_BUCKET: ${{ secrets.SOURCE_MINIO_BUCKET }}
         run: (mc alias set destBucket $DEST_MINIO_HOST $DEST_MINIO_ACCESS_KEY $DEST_MINIO_SECRET_KEY && mc alias set sourceBucket $SOURCE_MINIO_HOST $SOURCE_MINIO_ACCESS_KEY $SOURCE_MINIO_SECRET_KEY)
       - name: buckupAll
-        run: mc cp --recursive sourceBucket/$SOURCE_MINIO_BUCKET  destBucket/$DEST_MINIO_BUCKET 2>&1 /dev/null
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+        run: mc cp sourceBucket/$SOURCE_MINIO_BUCKET  destBucket/$DEST_MINIO_BUCKET 2>&1 /dev/null
