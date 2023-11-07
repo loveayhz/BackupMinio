@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '44 18 * * *'
+    - cron:  '30 10 * * *'
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   container_job:
@@ -26,6 +26,10 @@ jobs:
           SOURCE_MINIO_ACCESS_KEY: ${{ secrets.SOURCE_MINIO_ACCESS_KEY }}
           SOURCE_MINIO_SECRET_KEY: ${{ secrets.SOURCE_MINIO_SECRET_KEY }}
           SOURCE_MINIO_BUCKET: ${{ secrets.SOURCE_MINIO_BUCKET }}
-        run: (mc alias set destBucket $DEST_MINIO_HOST $DEST_MINIO_ACCESS_KEY $DEST_MINIO_SECRET_KEY && mc alias set sourceBucket $SOURCE_MINIO_HOST $SOURCE_MINIO_ACCESS_KEY $SOURCE_MINIO_SECRET_KEY)
+      - runs: |
+          mc alias set destBucket $DEST_MINIO_HOST $DEST_MINIO_ACCESS_KEY $DEST_MINIO_SECRET_KEY
+          mc alias set sourceBucket $SOURCE_MINIO_HOST $SOURCE_MINIO_ACCESS_KEY $SOURCE_MINIO_SECRET_KEY
       - name: buckupAll
-        run: mc cp --recursive sourceBucket/$SOURCE_MINIO_BUCKET  destBucket/$DEST_MINIO_BUCKET 2>&1 >/dev/null
+      - runs: |
+          mc cp --recursive sourceBucket/$SOURCE_MINIO_BUCKET  destBucket/$DEST_MINIO_BUCKET &>>mcBackup.log
+          mc cp ./mcBackup.log  destBucket/mcBackup
