@@ -32,4 +32,4 @@ jobs:
       - name: buckupAll
       - runs: |
           mc cp --recursive sourceBucket/$SOURCE_MINIO_BUCKET  destBucket/$DEST_MINIO_BUCKET &>>mcBackup.log
-          mc cp ./mcBackup.log  destBucket/mcBackup
+          mc cp ./mcBackup.log  destBucket/mcbackup
