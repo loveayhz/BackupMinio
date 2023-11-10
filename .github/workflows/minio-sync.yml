@@ -20,6 +20,9 @@ jobs:
     container:
       image: minio/mc:RELEASE.2021-04-22T17-40-00Z
     steps:
+      - uses: szenius/set-timezone@v1.0 # 设置执行环境的时区
+        with:
+          timezoneLinux: "Asia/Shanghai"
       - name: alies minio bucket
         env:
           DEST_MINIO_HOST: ${{ secrets.DEST_MINIO_HOST }}
